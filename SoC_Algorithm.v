@@ -1,7 +1,7 @@
-module SoC_estimator (
+module SoC_Algorithm (
     input clk,               
     input rst_n,           
-    input [15:0] voltage,
+	input [15:0] voltage,	
     input signed [15:0] current, 
     output reg [7:0] soc   
 );
