@@ -25,12 +25,12 @@ wire ms_tick;
 // 1ms Timer
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n)begin
-		clk_cnt <= 16'b0;
+	clk_cnt <= 16'b0;
     end else if(clk_cnt == CLK_DIV -1)begin
-		clk_cnt <= 16'b0;
-	end else begin
-		clk_cnt <= clk_cnt + 1;
-	end
+	clk_cnt <= 16'b0;
+    end else begin
+	clk_cnt <= clk_cnt + 1;
+    end
 end
 
 assign ms_tick = (clk_cnt == CLK_DIV-1);
@@ -38,35 +38,35 @@ assign ms_tick = (clk_cnt == CLK_DIV-1);
 // ESR Voltage Compensation
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n)begin 
-		v_comp <= 16'b0;
-	end else if (ms_tick) begin
+	v_comp <= 16'b0;
+    end else if (ms_tick) begin
         if (current > I_THRESH)begin       // Charging
             v_comp <= voltage - ((current * ESR)/1000);
-		end else if (current < -I_THRESH)begin // Discharging
+	end else if (current < -I_THRESH)begin // Discharging
             v_comp <= voltage + ((-current * ESR)/1000);
         end else begin                            // Resting
             v_comp <= voltage;
-		end
-    end else begin
-		v_comp <= voltage;							//IDLE
 	end
+    end else begin
+	v_comp <= voltage;							//IDLE
+     end
 end
 
 // Voltage-Based SoC (when |I| < I_THRESH)
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n)begin
-		soc_voltage <= 8'b0;
-	end else if (ms_tick) begin
+	soc_voltage <= 8'b0;
+    end else if (ms_tick) begin
         if (v_comp >= V_MAX)begin 
-			soc_voltage <= 100;
+		soc_voltage <= 100;
         end else if (v_comp <= V_MIN)begin 
-			soc_voltage <= 0;
+		soc_voltage <= 0;
         end else begin
-			soc_voltage <= ((v_comp - V_MIN) * 100) / (V_MAX - V_MIN);
-		end
-    end else begin
-		soc_voltage <= soc_voltage;
+		soc_voltage <= ((v_comp - V_MIN) * 100) / (V_MAX - V_MIN);
 	end
+    end else begin
+	soc_voltage <= soc_voltage;
+    end
 end
 
 // Coulomb Counting & Hybrid Logic
@@ -93,7 +93,7 @@ end
 always @(posedge clk or negedge rst_n) begin
     if (!rst_n)begin
 		soc <= 0;
-	end else if (ms_tick) begin
+    end else if (ms_tick) begin
         if (use_v_soc) begin
             soc <= soc_voltage;  // Direct voltage-based
         end else begin
@@ -104,7 +104,7 @@ always @(posedge clk or negedge rst_n) begin
 				soc <= 0;
             end else begin
 				soc <= q_accum / SOC_SCALE;
-			end
+	    end
         end
     end else begin
 	 soc <= soc;
