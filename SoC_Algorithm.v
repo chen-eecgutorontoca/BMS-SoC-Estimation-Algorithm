@@ -7,7 +7,7 @@ module SoC_Algorithm (
 );
 
 parameter SOC_SCALE    = 14000;     // 1% SoC = 44μC (2000μF * 2.2V / 100)
-parameter CLK_DIV 		= 50_000;        //50MHz down convert to 1ms. 
+parameter CLK_DIV 	= 50_000;        //50MHz down convert to 1ms. 
 parameter V_MAX        =  65535 ;	//ADC max (700V)
 parameter V_MIN        =  0		;	//ADC min (0V)
 parameter C_NOM       =  2000;	//2000uF	
@@ -84,6 +84,8 @@ always @(posedge clk or negedge rst_n) begin
             q_accum <= q_accum + (current*100);
             use_v_soc <= 0;
         end
+    end else begin
+	use_v_soc <= use_v_soc;
     end
 end
 
@@ -104,6 +106,8 @@ always @(posedge clk or negedge rst_n) begin
 				soc <= q_accum / SOC_SCALE;
 			end
         end
+    end else begin
+	 soc <= soc;
     end
 end
 
