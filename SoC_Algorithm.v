@@ -1,3 +1,6 @@
+//author: B.Chen
+//Last Updated: 28/04/2025
+
 module SoC_Algorithm (
     input clk,               
     input rst_n,           
